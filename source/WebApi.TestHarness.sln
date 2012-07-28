@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.TestHarness", "WebAPI.TestHarness\WebApi.TestHarness.csproj", "{220D06FF-0F98-4F01-870F-959ADDC4E440}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{59CFAD89-D592-47CB-A13B-F8F01888285B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.TestHarness.Tests", "WebApi.TestHarness.Tests\WebApi.TestHarness.Tests.csproj", "{A19F7193-F3DA-494E-9016-B8A827F14D24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{220D06FF-0F98-4F01-870F-959ADDC4E440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{220D06FF-0F98-4F01-870F-959ADDC4E440}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{220D06FF-0F98-4F01-870F-959ADDC4E440}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{220D06FF-0F98-4F01-870F-959ADDC4E440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19F7193-F3DA-494E-9016-B8A827F14D24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19F7193-F3DA-494E-9016-B8A827F14D24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19F7193-F3DA-494E-9016-B8A827F14D24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19F7193-F3DA-494E-9016-B8A827F14D24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A19F7193-F3DA-494E-9016-B8A827F14D24} = {59CFAD89-D592-47CB-A13B-F8F01888285B}
+	EndGlobalSection
+EndGlobal

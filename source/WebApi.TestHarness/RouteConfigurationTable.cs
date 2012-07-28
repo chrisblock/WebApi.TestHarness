@@ -9,19 +9,34 @@ namespace WebApi.TestHarness
 	[Serializable]
 	public class RouteConfigurationTable
 	{
+		public Uri BaseUri { get; private set; }
+
 		private readonly IList<RouteCounfiguration> _configurations;
 		public IEnumerable<RouteCounfiguration> Configurations { get { return _configurations; } }
 
-		public RouteConfigurationTable()
+		public RouteConfigurationTable(string baseUrl) : this(new Uri(baseUrl))
 		{
+		}
+
+		public RouteConfigurationTable(Uri baseUri)
+		{
+			BaseUri = baseUri;
 			_configurations = new List<RouteCounfiguration>();
 		}
 
-		public RouteConfigurationTable(params RouteCounfiguration[] routes) : this(routes.AsEnumerable())
+		public RouteConfigurationTable(string baseUrl, params RouteCounfiguration[] routes) : this(new Uri(baseUrl), routes.AsEnumerable())
 		{
 		}
 
-		public RouteConfigurationTable(IEnumerable<RouteCounfiguration> routes) : this()
+		public RouteConfigurationTable(Uri baseUri, params RouteCounfiguration[] routes) : this(baseUri, routes.AsEnumerable())
+		{
+		}
+
+		public RouteConfigurationTable(string baseUrl, IEnumerable<RouteCounfiguration> routes) : this(new Uri(baseUrl), routes)
+		{
+		}
+
+		public RouteConfigurationTable(Uri baseUri, IEnumerable<RouteCounfiguration> routes) : this(baseUri)
 		{
 			foreach (var route in routes)
 			{

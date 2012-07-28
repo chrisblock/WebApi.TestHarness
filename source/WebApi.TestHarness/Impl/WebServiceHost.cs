@@ -5,24 +5,23 @@ namespace WebApi.TestHarness.Impl
 {
 	internal class WebServiceHost : MarshalByRefObject, IWebServiceHost
 	{
-		private readonly Uri _baseUri;
-		private HttpSelfHostServer _server;
+		private readonly HttpSelfHostServer _server;
 
-		public WebServiceHost(Uri baseUri)
+		private bool _isStarted = false;
+
+		public WebServiceHost(RouteConfigurationTable routeTable)
 		{
-			_baseUri = baseUri;
+			var config = new HttpSelfHostConfiguration(routeTable.BaseUri);
+
+			routeTable.Configure(config.Routes);
+
+			_server = new HttpSelfHostServer(config);
 		}
 
-		public void Start(RouteConfigurationTable routeConfigurationTable)
+		public void Start()
 		{
-			if (_server == null)
+			if (_isStarted == false)
 			{
-				var config = new HttpSelfHostConfiguration(_baseUri);
-
-				routeConfigurationTable.Configure(config.Routes);
-
-				_server = new HttpSelfHostServer(config);
-
 				var openTask = _server.OpenAsync();
 
 				openTask.Wait();
@@ -31,12 +30,14 @@ namespace WebApi.TestHarness.Impl
 				{
 					throw new ApplicationException("Unable to open web service host.");
 				}
+
+				_isStarted = true;
 			}
 		}
 
-		public void Dispose()
+		public void Stop()
 		{
-			if (_server != null)
+			if (_isStarted)
 			{
 				var closeTask = _server.CloseAsync();
 
@@ -47,6 +48,11 @@ namespace WebApi.TestHarness.Impl
 					throw new ApplicationException("Unable to close web service host.");
 				}
 			}
+		}
+
+		public void Dispose()
+		{
+			Stop();
 		}
 	}
 }

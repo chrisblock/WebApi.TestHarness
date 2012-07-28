@@ -4,6 +4,8 @@ namespace WebApi.TestHarness
 {
 	public interface IWebServiceHost : IDisposable
 	{
-		void Start(RouteConfigurationTable routeConfigurationTable);
+		void Start();
+
+		void Stop();
 	}
 }

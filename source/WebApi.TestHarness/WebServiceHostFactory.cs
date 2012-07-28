@@ -8,13 +8,7 @@ namespace WebApi.TestHarness
 {
 	public static class WebServiceHostFactory
 	{
-		public static IWebServiceHost CreateFor<T>(string url)
-			where T : ApiController
-		{
-			return CreateFor<T>(new Uri(url));
-		}
-
-		public static IWebServiceHost CreateFor<T>(Uri uri)
+		public static IWebServiceHost CreateFor<T>(RouteConfigurationTable routeTable)
 			where T : ApiController
 		{
 			var type = typeof(T);
@@ -27,7 +21,7 @@ namespace WebApi.TestHarness
 			domain.LoadAssemblyContainingType<WebServiceHostProxy>();
 			domain.LoadAssemblyContainingType<T>();
 
-			var result = new WebServiceHostProxy(domain, uri);
+			var result = new WebServiceHostProxy(domain, routeTable);
 
 			return result;
 		}

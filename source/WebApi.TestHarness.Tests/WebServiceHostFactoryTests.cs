@@ -48,22 +48,22 @@ namespace WebApi.TestHarness.Tests
 		{
 			IEnumerable<string> hostedResult;
 
-			using (var host = WebServiceHostFactory.CreateFor<TestApiController>("http://localhost:12345"))
+			var routeTable = new RouteConfigurationTable("http://localhost:12345", new[]
 			{
-				var routeTable = new RouteConfigurationTable(new[]
+				new RouteCounfiguration
 				{
-					new RouteCounfiguration
+					Name = "DefaultRouteWithId",
+					Template = "api/{controller}/{id}",
+					DefaultParameters = new List<RouteConfigurationParameter>
 					{
-						Name = "DefaultRouteWithId",
-						Template = "api/{controller}/{id}",
-						DefaultParameters = new List<RouteConfigurationParameter>
-						{
-							RouteConfigurationParameter.Create("id")
-						}
+						RouteConfigurationParameter.Create("id")
 					}
-				});
+				}
+			});
 
-				host.Start(routeTable);
+			using (var host = WebServiceHostFactory.CreateFor<TestApiController>(routeTable))
+			{
+				host.Start();
 
 				HttpGet(out hostedResult);
 			}

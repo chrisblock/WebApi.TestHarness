@@ -56,13 +56,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDomainExtensions.cs" />
-    <Compile Include="Impl\WebServiceHost.cs" />
-    <Compile Include="Impl\WebServiceHostProxy.cs" />
-    <Compile Include="IWebServiceHost.cs" />
+    <Compile Include="Configuration\HostConfiguration.cs" />
+    <Compile Include="Configuration\RouteConfigurationParameter.cs" />
+    <Compile Include="Configuration\RouteConfigurationTable.cs" />
+    <Compile Include="Configuration\RouteCounfiguration.cs" />
+    <Compile Include="Hosting\Impl\WebServiceHostProxy.cs" />
+    <Compile Include="Hosting\IWebServiceHost.cs" />
+    <Compile Include="Hosting\Impl\WebServiceHost.cs" />
+    <Compile Include="HttpSelfHostConfigurationExtensions.cs" />
+    <Compile Include="MemberInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteConfigurationParameter.cs" />
-    <Compile Include="RouteConfigurationTable.cs" />
-    <Compile Include="RouteCounfiguration.cs" />
     <Compile Include="WebServiceHostFactory.cs" />
   </ItemGroup>
   <ItemGroup>

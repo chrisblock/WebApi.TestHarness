@@ -1,8 +1,9 @@
 using System;
 using System.Web.Http;
-using System.Web.Http.SelfHost;
 
-using WebApi.TestHarness.Impl;
+using WebApi.TestHarness.Configuration;
+using WebApi.TestHarness.Hosting;
+using WebApi.TestHarness.Hosting.Impl;
 
 namespace WebApi.TestHarness
 {
@@ -17,7 +18,6 @@ namespace WebApi.TestHarness
 
 			var domain = AppDomain.CreateDomain(String.Format("TestWebServiceDomainFor_{0}", type.Name), current.Evidence, current.BaseDirectory, current.BaseDirectory, false);
 
-			domain.LoadAssemblyContainingType<HttpSelfHostServer>();
 			domain.LoadAssemblyContainingType<WebServiceHostProxy>();
 			domain.LoadAssemblyContainingType<T>();
 

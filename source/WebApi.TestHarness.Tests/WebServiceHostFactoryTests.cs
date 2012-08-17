@@ -1,11 +1,15 @@
 ﻿// ReSharper disable InconsistentNaming
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
 using NUnit.Framework;
+
+using WebApi.TestHarness.Configuration;
 
 namespace WebApi.TestHarness.Tests
 {
@@ -27,6 +31,16 @@ namespace WebApi.TestHarness.Tests
 				var getTask = httpClient.GetAsync(_hostedServiceUrl);
 
 				getTask.Wait();
+
+				if (getTask.IsFaulted && (getTask.Exception != null))
+				{
+					throw getTask.Exception;
+				}
+
+				if (getTask.IsFaulted)
+				{
+					throw new Exception(String.Format("Could not GET from url '{0}'.", _hostedServiceUrl));
+				}
 
 				var httpResponse = getTask.Result;
 
@@ -63,8 +77,6 @@ namespace WebApi.TestHarness.Tests
 
 			using (var host = WebServiceHostFactory.CreateFor<TestApiController>(routeTable))
 			{
-				host.Start();
-
 				HttpGet(out hostedResult);
 			}
 
@@ -73,6 +85,12 @@ namespace WebApi.TestHarness.Tests
 
 			IEnumerable<string> unHostedResult;
 			Assert.That(() => HttpGet(out unHostedResult), Throws.Exception);
+
+			var assemblyNamesLoadedAfter = AppDomain.CurrentDomain.GetAssemblies()
+				.Select(x => x.GetName().Name)
+				.ToList();
+
+			Assert.That(assemblyNamesLoadedAfter, Has.No.Member("System.Web.Http.SelfHost"));
 		}
 	}
 }

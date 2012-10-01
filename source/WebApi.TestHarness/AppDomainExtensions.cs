@@ -20,7 +20,14 @@ namespace WebApi.TestHarness
 
 		public static void LoadAssemblyContainingType<T>(this AppDomain appDomain)
 		{
-			var assembly = typeof (T).Assembly;
+			var type = typeof (T);
+
+			appDomain.LoadAssemblyContainingType(type);
+		}
+
+		public static void LoadAssemblyContainingType(this AppDomain appDomain, Type type)
+		{
+			var assembly = type.Assembly;
 			var assemblyName = assembly.GetName();
 
 			appDomain.Load(assemblyName);

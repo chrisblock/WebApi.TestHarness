@@ -7,9 +7,15 @@ namespace WebApi.TestHarness.Tests
 {
 	public class TestApiController : ApiController
 	{
-		public IEnumerable<string> Get()
+		public IEnumerable<TestObject> Get()
 		{
-			return Enumerable.Range(0, 5).Select(x => String.Format("{0}", x));
+			var result = Enumerable.Range(0, 5).Select(x => new TestObject
+			{
+				Id = x,
+				Name = String.Format("{0}", x)
+			});
+
+			return result;
 		}
 	}
 }

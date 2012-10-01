@@ -32,14 +32,11 @@ namespace WebApi.TestHarness.Tests
 
 				getTask.Wait();
 
-				if (getTask.IsFaulted && (getTask.Exception != null))
-				{
-					throw getTask.Exception;
-				}
-
 				if (getTask.IsFaulted)
 				{
-					throw new Exception(String.Format("Could not GET from url '{0}'.", _hostedServiceUrl));
+					var exception = getTask.Exception ?? new Exception(String.Format("Could not GET from url '{0}'.", _hostedServiceUrl));
+
+					throw exception;
 				}
 
 				var httpResponse = getTask.Result;
@@ -60,13 +57,13 @@ namespace WebApi.TestHarness.Tests
 		[Test]
 		public void CreateFor_ValidApiControllerAndRouteConfiguration_SuccessfullyHostsService()
 		{
-			IEnumerable<string> hostedResult;
+			IEnumerable<TestObject> hostedResult;
 
 			var routeTable = new RouteConfigurationTable("http://localhost:12345", new[]
 			{
 				new RouteCounfiguration
 				{
-					Name = "DefaultRouteWithId",
+					Name = "DefaultRoute",
 					Template = "api/{controller}/{id}",
 					DefaultParameters = new List<RouteConfigurationParameter>
 					{
@@ -83,7 +80,7 @@ namespace WebApi.TestHarness.Tests
 			Assert.That(hostedResult, Is.Not.Null);
 			Assert.That(hostedResult, Is.Not.Empty);
 
-			IEnumerable<string> unHostedResult;
+			IEnumerable<TestObject> unHostedResult;
 			Assert.That(() => HttpGet(out unHostedResult), Throws.Exception);
 
 			var assemblyNamesLoadedAfter = AppDomain.CurrentDomain.GetAssemblies()

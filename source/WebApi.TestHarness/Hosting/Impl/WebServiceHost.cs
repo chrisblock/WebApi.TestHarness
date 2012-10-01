@@ -9,8 +9,6 @@ namespace WebApi.TestHarness.Hosting.Impl
 	{
 		private readonly HttpSelfHostServer _server;
 
-		private bool _isStarted = false;
-
 		public WebServiceHost(RouteConfigurationTable routeTable)
 		{
 			var config = new HttpSelfHostConfiguration(routeTable.BaseUri);
@@ -19,44 +17,26 @@ namespace WebApi.TestHarness.Hosting.Impl
 
 			_server = new HttpSelfHostServer(config);
 
-			Start();
-		}
+			var openTask = _server.OpenAsync();
 
-		private void Start()
-		{
-			if (_isStarted == false)
+			openTask.Wait();
+
+			if (openTask.IsFaulted || (openTask.Exception != null))
 			{
-				var openTask = _server.OpenAsync();
-
-				openTask.Wait();
-
-				if (openTask.IsFaulted || (openTask.Exception != null))
-				{
-					throw new ApplicationException("Unable to open web service host.");
-				}
-
-				_isStarted = true;
-			}
-		}
-
-		private void Stop()
-		{
-			if (_isStarted)
-			{
-				var closeTask = _server.CloseAsync();
-
-				closeTask.Wait();
-
-				if (closeTask.IsFaulted || (closeTask.Exception != null))
-				{
-					throw new ApplicationException("Unable to close web service host.");
-				}
+				throw new ApplicationException("Unable to open web service host.");
 			}
 		}
 
 		public void Dispose()
 		{
-			Stop();
+			var closeTask = _server.CloseAsync();
+
+			closeTask.Wait();
+
+			if (closeTask.IsFaulted || (closeTask.Exception != null))
+			{
+				throw new ApplicationException("Unable to close web service host.");
+			}
 		}
 	}
 }

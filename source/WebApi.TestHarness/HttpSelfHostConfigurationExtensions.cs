@@ -30,8 +30,8 @@ namespace WebApi.TestHarness
 			foreach (var defaultParameter in defaultParameters)
 			{
 				var value = defaultParameter.IsOptional
-				            	? RouteParameter.Optional
-				            	: defaultParameter.Value;
+					? RouteParameter.Optional
+					: defaultParameter.Value;
 
 				result.Add(defaultParameter.Name, value);
 			}

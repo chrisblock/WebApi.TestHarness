@@ -26,6 +26,6 @@ $nuget = Join-Path $baseDir "tools\NuGet\nuget.exe"
 
 $project = Join-Path $baseDir "source\WebApi.TestHarness\WebApi.TestHarness.csproj"
 
-$package = "$nuget pack $project -Prop Configuration=Release"
+$package = "$nuget pack $project -Properties ""Configuration=Release"""
 
 Invoke-Expression $package

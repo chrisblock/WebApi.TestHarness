@@ -55,24 +55,15 @@ namespace WebApi.TestHarness.Tests
 		}
 
 		[Test]
-		public void CreateFor_ValidApiControllerAndRouteConfiguration_SuccessfullyHostsService()
+		public void CreateFor_ValidApiControllerAndHostConfiguration_SuccessfullyHostsService()
 		{
 			IEnumerable<TestObject> hostedResult;
 
-			var routeTable = new RouteConfigurationTable("http://localhost:12345", new[]
-			{
-				new RouteCounfiguration
-				{
-					Name = "DefaultRoute",
-					Template = "api/{controller}/{id}",
-					DefaultParameters = new List<RouteConfigurationParameter>
-					{
-						RouteConfigurationParameter.Create("id")
-					}
-				}
-			});
-
-			using (var host = WebServiceHostFactory.CreateFor<TestApiController>(routeTable))
+			using (var host = WebServiceHostFactory.CreateFor<TestApiController>(configure =>
+				configure.WithRoutes(routes =>
+						routes
+							.WithBase("http://localhost:12345")
+							.AddRoute("DefaultRoute", "api/{controller}/{id}", RouteConfigurationParameter.Create("id")))))
 			{
 				HttpGet(out hostedResult);
 			}
@@ -87,6 +78,42 @@ namespace WebApi.TestHarness.Tests
 				.Select(x => x.GetName().Name)
 				.ToList();
 
+			// using the actual type here defeats our purpose; it would cause that type
+			// to be loaded into this AppDomain. hence, the magic string
+			Assert.That(assemblyNamesLoadedAfter, Has.No.Member("System.Web.Http.SelfHost"));
+		}
+
+		[Test]
+		public void CreateFor_ConfiguredWebServiceHostWithMockDependencyResolver_DependantAssembliesNotLoadedAfterDispose()
+		{
+			IEnumerable<TestObject> hostedResult;
+
+			using (var host = WebServiceHostFactory.CreateFor<TestApiController>(configure =>
+				configure.WithRoutes(routes =>
+						routes
+							.WithBase("http://localhost:12345")
+							.AddRoute(route => 
+								route
+									.Named("DefaultRoute")
+									.WithTemplate("api/{controller}/{id}")
+									.AddParameter(RouteConfigurationParameter.Create("id"))))
+					.UsingDependencyResolver<MockDependencyResolver>()))
+			{
+				HttpGet(out hostedResult);
+			}
+
+			Assert.That(hostedResult, Is.Not.Null);
+			Assert.That(hostedResult, Is.Not.Empty);
+
+			IEnumerable<TestObject> unHostedResult;
+			Assert.That(() => HttpGet(out unHostedResult), Throws.Exception);
+
+			var assemblyNamesLoadedAfter = AppDomain.CurrentDomain.GetAssemblies()
+				.Select(x => x.GetName().Name)
+				.ToList();
+
+			// using the actual type here defeats our purpose; it would cause that type
+			// to be loaded into this AppDomain. hence, the magic string
 			Assert.That(assemblyNamesLoadedAfter, Has.No.Member("System.Web.Http.SelfHost"));
 		}
 	}

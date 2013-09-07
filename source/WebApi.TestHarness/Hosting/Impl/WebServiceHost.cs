@@ -1,4 +1,5 @@
 using System;
+using System.Web.Http.Dependencies;
 using System.Web.Http.SelfHost;
 
 using WebApi.TestHarness.Configuration;
@@ -9,9 +10,18 @@ namespace WebApi.TestHarness.Hosting.Impl
 	{
 		private readonly HttpSelfHostServer _server;
 
-		public WebServiceHost(RouteConfigurationTable routeTable)
+		public WebServiceHost(HostConfiguration hostConfiguration)
 		{
+			var routeTable = hostConfiguration.RouteTable;
+
 			var config = new HttpSelfHostConfiguration(routeTable.BaseUri);
+
+			if (hostConfiguration.DependencyResolverType != null)
+			{
+				var dependencyResolver = Activator.CreateInstance(hostConfiguration.DependencyResolverType, config.DependencyResolver);
+
+				config.DependencyResolver = (IDependencyResolver) dependencyResolver;
+			}
 
 			config.Routes.Configure(routeTable);
 

@@ -6,5 +6,6 @@ namespace WebApi.TestHarness.Configuration
 	public class HostConfiguration
 	{
 		public RouteConfigurationTable RouteTable { get; set; }
+		public Type DependencyResolverType { get; set; }
 	}
 }

@@ -1,6 +1,7 @@
 *.user
 *.suo
 *.dotCover
+*.DotSettings
 
 _Resharper.*/
 

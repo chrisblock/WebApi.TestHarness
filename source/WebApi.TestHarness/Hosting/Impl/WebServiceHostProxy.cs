@@ -9,7 +9,7 @@ namespace WebApi.TestHarness.Hosting.Impl
 		private readonly AppDomain _webServiceHostDomain;
 		private readonly IWebServiceHost _webServiceHost;
 
-		public WebServiceHostProxy(AppDomain webServiceHostDomain, RouteConfigurationTable routeTable)
+		public WebServiceHostProxy(AppDomain webServiceHostDomain, HostConfiguration routeTable)
 		{
 			_webServiceHostDomain = webServiceHostDomain;
 			_webServiceHost = _webServiceHostDomain.CreateInstanceAndUnwrap<WebServiceHost>(routeTable);

@@ -9,8 +9,8 @@ namespace WebApi.TestHarness.Configuration
 	{
 		public Uri BaseUri { get; private set; }
 
-		private readonly IList<RouteCounfiguration> _configurations;
-		public IEnumerable<RouteCounfiguration> Configurations { get { return _configurations; } }
+		private readonly IList<RouteConfiguration> _configurations;
+		public IEnumerable<RouteConfiguration> Configurations { get { return _configurations; } }
 
 		public RouteConfigurationTable(string baseUrl) : this(new Uri(baseUrl))
 		{
@@ -19,22 +19,22 @@ namespace WebApi.TestHarness.Configuration
 		public RouteConfigurationTable(Uri baseUri)
 		{
 			BaseUri = baseUri;
-			_configurations = new List<RouteCounfiguration>();
+			_configurations = new List<RouteConfiguration>();
 		}
 
-		public RouteConfigurationTable(string baseUrl, params RouteCounfiguration[] routes) : this(new Uri(baseUrl), routes.AsEnumerable())
+		public RouteConfigurationTable(string baseUrl, params RouteConfiguration[] routes) : this(new Uri(baseUrl), routes.AsEnumerable())
 		{
 		}
 
-		public RouteConfigurationTable(Uri baseUri, params RouteCounfiguration[] routes) : this(baseUri, routes.AsEnumerable())
+		public RouteConfigurationTable(Uri baseUri, params RouteConfiguration[] routes) : this(baseUri, routes.AsEnumerable())
 		{
 		}
 
-		public RouteConfigurationTable(string baseUrl, IEnumerable<RouteCounfiguration> routes) : this(new Uri(baseUrl), routes)
+		public RouteConfigurationTable(string baseUrl, IEnumerable<RouteConfiguration> routes) : this(new Uri(baseUrl), routes)
 		{
 		}
 
-		public RouteConfigurationTable(Uri baseUri, IEnumerable<RouteCounfiguration> routes) : this(baseUri)
+		public RouteConfigurationTable(Uri baseUri, IEnumerable<RouteConfiguration> routes) : this(baseUri)
 		{
 			foreach (var route in routes)
 			{
@@ -42,14 +42,14 @@ namespace WebApi.TestHarness.Configuration
 			}
 		}
 
-		public void Add(RouteCounfiguration entry)
+		public void Add(RouteConfiguration entry)
 		{
 			_configurations.Add(entry);
 		}
 
 		public void Add(string name, string template, IEnumerable<RouteConfigurationParameter> defaultParameters = null)
 		{
-			var entry = new RouteCounfiguration
+			var entry = new RouteConfiguration
 			{
 				Name = name,
 				Template = template,

@@ -1,1 +1,1 @@
-WebApi.TestHarness extends the functionality of the WebApi.SelfHost package to simplify hosting of WepApi services in a seperate AppDomain using a disposable host in order to facility high-level integration tests of WebApi Web Services.
+WebApi.TestHarness extends the functionality of the WebApi.SelfHost package to simplify hosting of WepApi services in a seperate AppDomain using a disposable host in order to facilitate high-level integration tests of WebApi Web Services.

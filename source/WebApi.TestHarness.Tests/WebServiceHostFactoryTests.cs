@@ -1,6 +1,4 @@
-﻿// ReSharper disable InconsistentNaming
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +8,8 @@ using System.Net.Http.Headers;
 using NUnit.Framework;
 
 using WebApi.TestHarness.Configuration;
+
+// ReSharper disable InconsistentNaming
 
 namespace WebApi.TestHarness.Tests
 {
@@ -59,11 +59,11 @@ namespace WebApi.TestHarness.Tests
 		{
 			IEnumerable<TestObject> hostedResult;
 
-			using (var host = WebServiceHostFactory.CreateFor<TestApiController>(configure =>
+			using (WebServiceHostFactory.CreateFor<TestApiController>(configure =>
 				configure.WithRoutes(routes =>
-						routes
-							.WithBase("http://localhost:12345")
-							.AddRoute("DefaultRoute", "api/{controller}/{id}", RouteConfigurationParameter.Create("id")))))
+					routes
+						.WithBase("http://localhost:12345")
+						.AddRoute("DefaultRoute", "api/{controller}/{id}", RouteConfigurationParameter.Create("id")))))
 			{
 				HttpGet(out hostedResult);
 			}
@@ -88,15 +88,15 @@ namespace WebApi.TestHarness.Tests
 		{
 			IEnumerable<TestObject> hostedResult;
 
-			using (var host = WebServiceHostFactory.CreateFor<TestApiController>(configure =>
+			using (WebServiceHostFactory.CreateFor<TestApiController>(configure =>
 				configure.WithRoutes(routes =>
-						routes
-							.WithBase("http://localhost:12345")
-							.AddRoute(route => 
-								route
-									.Named("DefaultRoute")
-									.WithTemplate("api/{controller}/{id}")
-									.AddParameter(RouteConfigurationParameter.Create("id"))))
+					routes
+						.WithBase("http://localhost:12345")
+						.AddRoute(route => 
+							route
+								.Named("DefaultRoute")
+								.WithTemplate("api/{controller}/{id}")
+								.AddParameter(RouteConfigurationParameter.Create("id"))))
 					.UsingDependencyResolver<MockDependencyResolver>()))
 			{
 				HttpGet(out hostedResult);

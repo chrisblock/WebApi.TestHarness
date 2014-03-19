@@ -37,16 +37,37 @@ namespace WebApi.TestHarness.Hosting.Impl
 			}
 		}
 
+		~WebServiceHost()
+		{
+			Dispose(false);
+		}
+
 		public void Dispose()
 		{
-			var closeTask = _server.CloseAsync();
+			Dispose(true);
 
-			closeTask.Wait();
+			GC.SuppressFinalize(this);
+		}
 
-			if (closeTask.IsFaulted || (closeTask.Exception != null))
+		private void Dispose(bool disposing)
+		{
+			if (disposing)
 			{
-				throw new ApplicationException("Unable to close web service host.");
+				// dispose managed resources
+
+				var closeTask = _server.CloseAsync();
+
+				closeTask.Wait();
+
+				if (closeTask.IsFaulted || (closeTask.Exception != null))
+				{
+					throw new ApplicationException("Unable to close web service host.");
+				}
+
+				_server.Dispose();
 			}
+
+			// dispose native resources
 		}
 	}
 }

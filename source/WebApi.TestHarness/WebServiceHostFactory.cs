@@ -47,7 +47,35 @@ namespace WebApi.TestHarness
 
 			var current = AppDomain.CurrentDomain;
 
-			var domain = AppDomain.CreateDomain(String.Format("TestWebServiceDomainFor_{0}", type.Name), current.Evidence, current.BaseDirectory, current.RelativeSearchPath, false);
+			var setupInfo = new AppDomainSetup
+			{
+				//ActivationArguments = ,
+				//AppDomainInitializer = ,
+				//AppDomainInitializerArguments = ,
+				//ApplicationName = ,
+				ApplicationBase = current.BaseDirectory,
+				//AppDomainManagerType = ,
+				//AppDomainManagerAssembly = ,
+				ApplicationTrust = current.ApplicationTrust,
+				//CachePath = ,
+				ConfigurationFile = current.SetupInformation.ConfigurationFile,
+				//DisallowApplicationBaseProbing = ,
+				DisallowBindingRedirects = false,
+				DisallowCodeDownload = true,
+				//DisallowPublisherPolicy = ,
+				//DynamicBase = ,
+				//LicenseFile = ,
+				//LoaderOptimization = ,
+				//PartialTrustVisibleAssemblies = ,
+				//PrivateBinPath = ,
+				//PrivateBinPathProbe = ,
+				//SandboxInterop = ,
+				//ShadowCopyDirectories = ,
+				//ShadowCopyFiles = ,
+				//TargetFrameworkName = 
+			};
+
+			var domain = AppDomain.CreateDomain(String.Format("TestWebServiceDomainFor_{0}", type.Name), current.Evidence, setupInfo);
 
 			domain.LoadAssemblyContainingType<WebServiceHostProxy>();
 			domain.LoadAssemblyContainingType<T>();
@@ -57,12 +85,12 @@ namespace WebApi.TestHarness
 			return result;
 		}
 
-		public static IWebServiceHost CreateFor<T>(Func<IHostConfigurator, IHostConfigurator> configure)
+		public static IWebServiceHost CreateFor<T>(Action<IHostConfigurator> configure)
 			where T : ApiController
 		{
 			var configurator = new HostConfigurator();
 
-			configurator = (HostConfigurator) configure(configurator);
+			configure(configurator);
 
 			var configuration = configurator.BuildConfiguration();
 

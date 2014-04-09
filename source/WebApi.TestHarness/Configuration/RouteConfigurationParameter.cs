@@ -14,7 +14,7 @@ namespace WebApi.TestHarness.Configuration
 			return new RouteConfigurationParameter
 			{
 				Name = name,
-				IsOptional = value == null,
+				IsOptional = (value == null),
 				Value = value
 			};
 		}

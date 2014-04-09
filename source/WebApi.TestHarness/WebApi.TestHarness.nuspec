@@ -9,7 +9,7 @@
 		<projectUrl>http://github.com/chrisblock/WebApi.TestHarness</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>$description$</description>
-		<releaseNotes>Cleaned up the isolation inside the hosted AppDomain.</releaseNotes>
+		<releaseNotes>Moved to the OWIN Self Host library.</releaseNotes>
 		<copyright>Copyright 2012</copyright>
 		<tags>WebApi REST Test Testing</tags>
 	</metadata>

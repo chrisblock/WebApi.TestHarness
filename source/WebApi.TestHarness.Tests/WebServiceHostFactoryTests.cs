@@ -20,7 +20,7 @@ namespace WebApi.TestHarness.Tests
 
 		private static HttpStatusCode HttpGet<T>(out T result)
 		{
-			result = default(T);
+			result = default (T);
 
 			HttpStatusCode status;
 
@@ -80,7 +80,7 @@ namespace WebApi.TestHarness.Tests
 
 			// using the actual type here defeats our purpose; it would cause that type
 			// to be loaded into this AppDomain. hence, the magic string
-			Assert.That(assemblyNamesLoadedAfter, Has.No.Member("System.Web.Http.SelfHost"));
+			Assert.That(assemblyNamesLoadedAfter, Has.No.Member("Microsoft.Owin.Hosting"));
 		}
 
 		[Test]
@@ -114,7 +114,7 @@ namespace WebApi.TestHarness.Tests
 
 			// using the actual type here defeats our purpose; it would cause that type
 			// to be loaded into this AppDomain. hence, the magic string
-			Assert.That(assemblyNamesLoadedAfter, Has.No.Member("System.Web.Http.SelfHost"));
+			Assert.That(assemblyNamesLoadedAfter, Has.No.Member("Microsoft.Owin.Hosting"));
 		}
 	}
 }

@@ -1,6 +1,10 @@
 using System;
+using System.Web.Http;
 using System.Web.Http.Dependencies;
-using System.Web.Http.SelfHost;
+
+using Microsoft.Owin.Hosting;
+
+using Owin;
 
 using WebApi.TestHarness.Configuration;
 
@@ -8,33 +12,27 @@ namespace WebApi.TestHarness.Hosting.Impl
 {
 	internal class WebServiceHost : MarshalByRefObject, IWebServiceHost
 	{
-		private readonly HttpSelfHostServer _server;
+		private readonly IDisposable _server;
 
 		public WebServiceHost(HostConfiguration hostConfiguration)
 		{
 			var routeTable = hostConfiguration.RouteTable;
 
-			var config = new HttpSelfHostConfiguration(routeTable.BaseUri);
+			var configuration = new HttpConfiguration();
 
 			if (hostConfiguration.DependencyResolverType != null)
 			{
-				var dependencyResolver = Activator.CreateInstance(hostConfiguration.DependencyResolverType, config.DependencyResolver);
+				var dependencyResolver = Activator.CreateInstance(hostConfiguration.DependencyResolverType, configuration.DependencyResolver);
 
-				config.DependencyResolver = (IDependencyResolver) dependencyResolver;
+				configuration.DependencyResolver = (IDependencyResolver) dependencyResolver;
 			}
 
-			config.Routes.Configure(routeTable);
+			routeTable.Configure(configuration.Routes);
 
-			_server = new HttpSelfHostServer(config);
-
-			var openTask = _server.OpenAsync();
-
-			openTask.Wait();
-
-			if (openTask.IsFaulted || (openTask.Exception != null))
+			_server = WebApp.Start(routeTable.BaseUri.ToString(), builder =>
 			{
-				throw new ApplicationException("Unable to open web service host.");
-			}
+				builder.UseWebApi(configuration);
+			});
 		}
 
 		~WebServiceHost()
@@ -54,15 +52,6 @@ namespace WebApi.TestHarness.Hosting.Impl
 			if (disposing)
 			{
 				// dispose managed resources
-
-				var closeTask = _server.CloseAsync();
-
-				closeTask.Wait();
-
-				if (closeTask.IsFaulted || (closeTask.Exception != null))
-				{
-					throw new ApplicationException("Unable to close web service host.");
-				}
 
 				_server.Dispose();
 			}
